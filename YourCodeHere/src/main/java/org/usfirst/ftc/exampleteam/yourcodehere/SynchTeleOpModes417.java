@@ -18,7 +18,8 @@ import org.swerverobotics.library.interfaces.TeleOp;
 @TeleOp(name="417 TeleOp Demo", group="Swerve Examples")
 public class SynchTeleOpModes417 extends SynchronousOpMode
 {
-    enum DRIVEMODE { TANK, ARCADE, LEFT_STICK };
+    enum DRIVEMODE { TANK, ARCADE, LEFT_STICK,X15,X2,X3 };
+    String[]  driveModeLabel = new String[] { "tank", "arcade", "left stick","X1.5","X2","X3"};
 
     // All hardware variables can only be initialized inside the main() function,
     // not here at their member variable declarations.
@@ -29,7 +30,7 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
 
 
     DRIVEMODE driveMode      = DRIVEMODE.TANK;
-    String[]  driveModeLabel = new String[] { "tank", "arcade", "left stick"};
+
 
     @Override protected void main() throws InterruptedException
     {
@@ -72,6 +73,16 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
                 {
                     this.driveMode = DRIVEMODE.LEFT_STICK;
                 }
+                else if (this.gamepad1.dpad_down)
+                {
+                    this.driveMode = DRIVEMODE.X15;
+                } else if (this.gamepad1.dpad_left)
+                {
+                    this.driveMode = DRIVEMODE.X2;
+                } else if (this.gamepad1.dpad_right)
+                {
+                    this.driveMode = DRIVEMODE.X3;
+                }
 
                 // There is (likely) new gamepad input available.
                 // Do something with that! Here, we just drive.
@@ -102,6 +113,30 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
             {
                 float leftPower = pad.left_stick_y;
                 float rightPower = pad.right_stick_y;
+                powerLeft = Range.clip(leftPower, -1f, 1f);
+                powerRight = Range.clip(rightPower, -1f, 1f);
+            }
+            break;
+            case X15:
+            {
+                float leftPower = xformWithExponent(pad.left_stick_y, 1.5f);
+                float rightPower = xformWithExponent(pad.right_stick_y, 1.5f);
+                powerLeft =  Range.clip(leftPower, -1f, 1f);
+                powerRight = Range.clip(rightPower, -1f, 1f);
+            }
+            break;
+            case X2:
+            {
+                float leftPower = xformWithExponent(pad.left_stick_y, 2f);
+                float rightPower = xformWithExponent(pad.right_stick_y, 2f);
+                powerLeft = Range.clip(leftPower, -1f, 1f);
+                powerRight = Range.clip(rightPower, -1f, 1f);
+            }
+            break;
+            case X3:
+            {
+                float leftPower =  Math.signum(pad.left_stick_y) * xformWithExponent(pad.left_stick_y, 3f);
+                float rightPower = Math.signum(pad.right_stick_y) *xformWithExponent(pad.right_stick_y, 3f);
                 powerLeft = Range.clip(leftPower, -1f, 1f);
                 powerRight = Range.clip(rightPower, -1f, 1f);
             }
@@ -166,4 +201,11 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
         float oneToTen  = zeroToOne * 9 + 1;
         return (float)(Math.log10(oneToTen) * Math.signum(level));
     }
+
+    float xformWithExponent(float level , float exponent)
+    {
+        return (float)Math.pow(level, exponent) * Math.signum(level);
+    }
+
+
 }
