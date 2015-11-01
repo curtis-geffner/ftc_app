@@ -1,4 +1,4 @@
-package org.swerverobotics.library.examples;
+package org.usfirst.ftc.exampleteam.yourcodehere;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
