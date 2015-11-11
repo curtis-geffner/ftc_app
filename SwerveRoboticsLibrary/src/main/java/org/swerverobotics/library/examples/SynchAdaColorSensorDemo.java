@@ -15,6 +15,7 @@ import org.swerverobotics.library.interfaces.TeleOp;
  * called "color". We don't really need to control the sensor's LED - it comes on by default.
  */
 @TeleOp(name="AdaColorSensor", group="Swerve Examples")
+@Disabled
 public class SynchAdaColorSensorDemo extends SynchronousOpMode {
 
     ColorSensor sensorRGB = null;

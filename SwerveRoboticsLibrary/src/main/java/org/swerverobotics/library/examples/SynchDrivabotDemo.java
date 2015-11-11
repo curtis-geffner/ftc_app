@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.swerverobotics.library.ClassFactory;
 import org.swerverobotics.library.SynchronousOpMode;
+import org.swerverobotics.library.interfaces.Disabled;
 import org.swerverobotics.library.interfaces.EulerAngles;
 import org.swerverobotics.library.interfaces.IBNO055IMU;
 import org.swerverobotics.library.interfaces.IFunc;
@@ -21,6 +22,7 @@ import org.swerverobotics.library.interfaces.Velocity;
  * An example of a synchronous opmode that implements a simple drive-a-bot. 
  */
 @TeleOp(name="Drivabot", group="Swerve Examples")
+@Disabled
 public class SynchDrivabotDemo extends SynchronousOpMode
 {
     // All hardware variables can only be initialized inside the main() function,
