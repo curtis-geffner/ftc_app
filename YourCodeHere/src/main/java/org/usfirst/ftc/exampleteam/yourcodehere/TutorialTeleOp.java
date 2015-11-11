@@ -30,7 +30,7 @@ public class TutorialTeleOp extends SynchronousOpMode
     {
         // Initialize motors
         motorLeft = hardwareMap.dcMotor.get("motorLeft");
-        motorRight = hardwareMap.dcMotor.get("motorRight");
+        motorRight = hardwareMap.dcMotor.get("motorFrontRight");
 
         // Initialize servos
         servoArm = hardwareMap.servo.get("servoArm");

@@ -18,15 +18,17 @@ import org.swerverobotics.library.interfaces.TeleOp;
 @TeleOp(name="417 TeleOp Demo", group="Swerve Examples")
 public class SynchTeleOpModes417 extends SynchronousOpMode
 {
-    enum DRIVEMODE { TANK, ARCADE, LEFT_STICK,X15,X2,X3 };
+    enum DRIVEMODE { TANK, ARCADE, LEFT_STICK,X4,X2,X3 };
     String[]  driveModeLabel = new String[] { "tank", "arcade", "left stick","X1.5","X2","X3"};
 
     // All hardware variables can only be initialized inside the main() function,
     // not here at their member variable declarations.
-    DcMotor motorLeft  = null;
-    DcMotor motorRight = null;
-    DcMotor motorLeft2  = null;
-    DcMotor motorRight2 = null;
+    DcMotor motorFrontLeft  = null;
+    DcMotor motorFrontRight = null;
+    DcMotor motorBackLeft  = null;
+    DcMotor motorBackRight = null;
+    DcMotor motorCollector = null;
+    DcMotor motorHook = null;
 
 
     DRIVEMODE driveMode      = DRIVEMODE.TANK;
@@ -35,23 +37,23 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
     @Override protected void main() throws InterruptedException
     {
         // Initialize our hardware variables
-        this.motorLeft = this.hardwareMap.dcMotor.get("motorLeft");
-        this.motorRight = this.hardwareMap.dcMotor.get("motorRight");
-        this.motorLeft2 = this.hardwareMap.dcMotor.get("motorLeft2");
-        this.motorRight2 = this.hardwareMap.dcMotor.get("motorRight2");
+        this.motorFrontLeft = this.hardwareMap.dcMotor.get("motorFrontLeft");
+        this.motorFrontRight = this.hardwareMap.dcMotor.get("motorFrontRight");
+        this.motorBackLeft = this.hardwareMap.dcMotor.get("motorBackLeft");
+        this.motorBackRight = this.hardwareMap.dcMotor.get("motorBackRight");
 
         // Configure the knobs of the hardware according to how you've wired your
         // robot. Here, we assume that there are no encoders connected to the motors,
         // so we inform the motor objects of that fact.
-        this.motorLeft.setChannelMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
-        this.motorRight.setChannelMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
-        this.motorLeft2.setChannelMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
-        this.motorRight2.setChannelMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
+        this.motorFrontLeft.setChannelMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
+        this.motorFrontRight.setChannelMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
+        this.motorBackLeft.setChannelMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
+        this.motorBackRight.setChannelMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
 
         // One of the two motors (here, the left) should be set to reversed direction
         // so that it can take the same power level values as the other motor.
-        this.motorLeft.setDirection(DcMotor.Direction.REVERSE);
-        this.motorLeft2.setDirection(DcMotor.Direction.REVERSE);
+        this.motorFrontLeft.setDirection(DcMotor.Direction.REVERSE);
+        this.motorBackLeft.setDirection(DcMotor.Direction.REVERSE);
 
         // Wait until the game begins
         this.waitForStart();
@@ -75,7 +77,7 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
                 }
                 else if (this.gamepad1.dpad_down)
                 {
-                    this.driveMode = DRIVEMODE.X15;
+                    this.driveMode = DRIVEMODE.X4;
                 } else if (this.gamepad1.dpad_left)
                 {
                     this.driveMode = DRIVEMODE.X2;
@@ -117,12 +119,12 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
                 powerRight = Range.clip(rightPower, -1f, 1f);
             }
             break;
-            case X15:
+            case X4:
             {
-                float leftPower = xformWithExponent(pad.left_stick_y, 1.5f);
-                float rightPower = xformWithExponent(pad.right_stick_y, 1.5f);
-                powerLeft =  Range.clip(leftPower, -1f, 1f);
-                powerRight = Range.clip(rightPower, -1f, 1f);
+                float leftPower = xformWithExponent(pad.left_stick_y, 4f);
+                float rightPower = xformWithExponent(pad.right_stick_y, 24);
+                powerLeft = Range.clip(leftPower, -1f, 1f);
+                powerRight = Range.clip(rightPower, -1f, 1f);;
             }
             break;
             case X2:
@@ -182,10 +184,10 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
         }
 
         // Tell the motors
-        this.motorLeft.setPower(powerLeft);
-        this.motorRight.setPower(powerRight);
-        this.motorLeft2.setPower(powerLeft);
-        this.motorRight2.setPower(powerRight);
+        this.motorFrontLeft.setPower(powerLeft);
+        this.motorFrontRight.setPower(powerRight);
+        this.motorBackLeft.setPower(powerLeft);
+        this.motorBackRight.setPower(powerRight);
     }
 
     float xformDrivingPowerLevels(float level)
