@@ -58,27 +58,48 @@ public class MotorTest417 extends SynchronousOpMode
         while (this.opModeIsActive()) {
             if (this.updateGamepads()) {
                 if (this.gamepad1.a) {
-                    this.motorFrontLeft.setPower(1);
+                  //  this.motorFrontLeft.setPower(1);
+                    double power = 1.0;
+                    this.motorFrontLeft.setPower(power);
+                  /*  this.motorBackRight.setPower(power);
+                    this.motorFrontRight.setPower(power);
+                    this.motorBackRight.setPower(power);
+                  */  this.telemetry.log.add("left motor power applied: " + power);
                 }
 
                 if (this.gamepad1.b) {
-                    this.motorFrontRight.setPower(1);
+                    //this.motorFrontRight.setPower(1);
+                    double power = 1.0;
+                    this.motorFrontRight.setPower(power);
+                    this.telemetry.log.add("right motor power applied: " + power);
                 }
 
                 if (this.gamepad1.y) {
-                    this.motorBackLeft.setPower(1);
+                    //this.motorBackLeft.setPower(1);
+                    double power = 1.0;
+                    this.motorBackLeft.setPower(power);
+                    this.telemetry.log.add("left motor power applied: " + power);
                 }
 
                 if (this.gamepad1.x) {
-                    this.motorBackRight.setPower(1);
+                    //this.motorBackRight.setPower(1);
+                    double power = 1.0;
+                    this.motorBackRight.setPower(power);
+                    this.telemetry.log.add("right motor power applied: " + power);
                 }
 
                 if (this.gamepad1.dpad_left) {
-                    this.motorCollector.setPower(1);
+                    //this.motorCollector.setPower(1);
+                    double power = 1.0;
+                    this.motorCollector.setPower(power);
+                    this.telemetry.log.add("collector motor power applied: " + power);
                 }
 
                 if (this.gamepad1.dpad_right) {
-                    this.motorHook.setPower(1);
+                   // this.motorHook.setPower(1);
+                    double power = 1.0;
+                    this.motorHook.setPower(power);
+                    this.telemetry.log.add("hook motor power applied: "+ power);
                 }
 
                 if (this.gamepad1.left_bumper) {

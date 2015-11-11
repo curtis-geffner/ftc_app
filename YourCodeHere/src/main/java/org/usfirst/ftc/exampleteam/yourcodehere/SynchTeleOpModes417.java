@@ -184,8 +184,8 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
         }
 
         // Tell the motors
-        this.motorFrontLeft.setPower(powerLeft);
-        this.motorFrontRight.setPower(powerRight);
+        this.motorFrontLeft.setPower(powerLeft * -1);
+        this.motorFrontRight.setPower(powerRight * -1);
         this.motorBackLeft.setPower(powerLeft);
         this.motorBackRight.setPower(powerRight);
     }
