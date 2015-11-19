@@ -56,6 +56,18 @@ public class MotorTest417 extends SynchronousOpMode
 
         // Enter a loop processing all the input we receive
         while (this.opModeIsActive()) {
+
+            this.motorFrontRight.setPower(1.0);
+            this.motorFrontLeft.setPower(1.0);
+            this.motorBackRight.setPower(1.0);
+            this.motorBackLeft.setPower(1.0);
+            Thread.sleep(1000);
+            this.motorFrontRight.setPower(0);
+            this.motorFrontLeft.setPower(0);
+            this.motorBackRight.setPower(0);
+            this.motorBackLeft.setPower(0);
+            Thread.sleep(1000);
+
             if (this.updateGamepads()) {
                 if (this.gamepad1.a) {
                   //  this.motorFrontLeft.setPower(1);
@@ -64,7 +76,7 @@ public class MotorTest417 extends SynchronousOpMode
                   /*  this.motorBackRight.setPower(power);
                     this.motorFrontRight.setPower(power);
                     this.motorBackRight.setPower(power);
-                  */  this.telemetry.log.add("left motor power applied: " + power);
+                  */   this.telemetry.log.add("left motor power applied: " + power);
                 }
 
                 if (this.gamepad1.b) {
