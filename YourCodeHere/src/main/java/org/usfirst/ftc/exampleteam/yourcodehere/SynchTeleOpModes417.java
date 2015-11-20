@@ -85,26 +85,26 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
                 }
 
                 //control collector motor
-                if (this.gamepad1.left_bumper) {
+                if (this.gamepad1.left_bumper || this.gamepad2.left_bumper) {
                     this.motorCollector.setPower(FULL_SPEED_REVERSE);
                 } else {
                     this.motorCollector.setPower(STOPPED);
                 }
                 //control delivery mechanism
-                if (this.gamepad1.x) {
+                if (this.gamepad1.x || this.gamepad2.x) {
                     servoDeliveryLeft.setPosition(1);
-                } else if (this.gamepad1.a) {
+                } else if (this.gamepad1.a || this.gamepad2.a) {
                     servoDeliveryLeft.setPosition(0);
                 } else {
                     servoDeliveryLeft.setPosition(.5);
                 }
 
 
-                if(this.gamepad1.y)
+                if(this.gamepad1.y || this.gamepad2.y)
                 {
                     servoDeliveryRight.setPosition(1);
                 }
-                else if(this.gamepad1.b)
+                else if(this.gamepad1.b || this.gamepad2.b)
                 {
                     servoDeliveryRight.setPosition(0);
                 }
