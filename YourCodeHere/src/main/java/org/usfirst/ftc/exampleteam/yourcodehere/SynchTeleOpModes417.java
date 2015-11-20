@@ -46,6 +46,8 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
         this.motorFrontRight = this.hardwareMap.dcMotor.get("motorFrontRight");
         this.motorBackLeft = this.hardwareMap.dcMotor.get("motorBackLeft");
         this.motorBackRight = this.hardwareMap.dcMotor.get("motorBackRight");
+        this.motorCollector = this.hardwareMap.dcMotor.get("motorCollector");
+        this.motorHook = this.hardwareMap.dcMotor.get("motorHook");
 
         // Configure the knobs of the hardware according to how you've wired your
         // robot. Here, we assume that there are no encoders connected to the motors,
@@ -54,6 +56,8 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
         this.motorFrontRight.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
         this.motorBackLeft.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
         this.motorBackRight.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
+        this.motorHook.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
+        this.motorCollector.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
 
         // One of the two motors (here, the left) should be set to reversed direction
         // so that it can take the same power level values as the other motor.
@@ -69,46 +73,30 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
         // Enter a loop processing all the input we receive
         while (this.opModeIsActive())
         {
-            if (this.updateGamepads())
-            {
-                if (this.gamepad1.dpad_up)
-                {
+            if (this.updateGamepads()) {
+                if (this.gamepad1.dpad_up) {
                     this.driveMode = DRIVEMODE.TANK;
-                }
-                else if (this.gamepad1.dpad_down)
-                {
+                } else if (this.gamepad1.dpad_down) {
                     this.driveMode = DRIVEMODE.ARCADE;
-                }
-                else if (this.gamepad1.dpad_left)
-                {
+                } else if (this.gamepad1.dpad_left) {
                     this.driveMode = DRIVEMODE.X4;
-                }
-                else if (this.gamepad1.dpad_right)
-                {
+                } else if (this.gamepad1.dpad_right) {
                     this.driveMode = DRIVEMODE.X3;
                 }
 
                 //control collector motor
-                if(this.gamepad1.left_bumper)
-                {
+                if (this.gamepad1.left_bumper) {
                     this.motorCollector.setPower(FULL_SPEED_REVERSE);
-                }
-                else
-                {
+                } else {
                     this.motorCollector.setPower(STOPPED);
                 }
                 //control delivery mechanism
-                if(this.gamepad1.x)
-                {
+                if (this.gamepad1.x) {
                     servoDeliveryLeft.setPosition(1);
-                }
-                else if(this.gamepad1.a)
-                {
-                    servoDeliveryLeft.setPosition(-1);
-                }
-                else
-                {
+                } else if (this.gamepad1.a) {
                     servoDeliveryLeft.setPosition(0);
+                } else {
+                    servoDeliveryLeft.setPosition(.5);
                 }
 
 
@@ -118,12 +106,13 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
                 }
                 else if(this.gamepad1.b)
                 {
-                    servoDeliveryRight.setPosition(-1);
+                    servoDeliveryRight.setPosition(0);
                 }
                 else
                 {
-                    servoDeliveryRight.setPosition(0);
+                    servoDeliveryRight.setPosition(.5);
                 }
+               //servoDeliveryLeft.setPosition(this.gamepad1.left_trigger);
 
 
 
