@@ -3,17 +3,14 @@ package org.usfirst.ftc.exampleteam.yourcodehere;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 import org.swerverobotics.library.SynchronousOpMode;
 import org.swerverobotics.library.interfaces.TeleOp;
 
 /**
- * An example of a synchronous opmode that's a little more complex than
- * SynchTeleOp, in that it supports multiple different drive modes that are switched
- * between using the A, B, and Y gamepad buttons.
- *
- * TODO: Perhaps consolidate the two examples 
+ * 417 teleop
  */
 @TeleOp(name="417 TeleOp Demo", group="Swerve Examples")
 public class SynchTeleOpModes417 extends SynchronousOpMode
@@ -29,9 +26,17 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
     DcMotor motorBackRight = null;
     DcMotor motorCollector = null;
     DcMotor motorHook = null;
+    Servo   servoDeliveryRight = null;
+    Servo   servoDeliveryLeft = null;
+
 
 
     DRIVEMODE driveMode      = DRIVEMODE.TANK;
+
+    //motor speed constants
+    final double FULL_SPEED = 1.0;
+    final double STOPPED = 0.0;
+    final double FULL_SPEED_REVERSE = -1.0;
 
 
     @Override protected void main() throws InterruptedException
@@ -55,6 +60,9 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
         this.motorFrontLeft.setDirection(DcMotor.Direction.REVERSE);
         this.motorBackLeft.setDirection(DcMotor.Direction.REVERSE);
 
+        this.servoDeliveryLeft = this.hardwareMap.servo.get("servoDeliveryLeft");
+        this.servoDeliveryRight = this.hardwareMap.servo.get("servoDeliveryRight");
+
         // Wait until the game begins
         this.waitForStart();
 
@@ -63,28 +71,62 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
         {
             if (this.updateGamepads())
             {
-                if (this.gamepad1.a)
+                if (this.gamepad1.dpad_up)
                 {
                     this.driveMode = DRIVEMODE.TANK;
                 }
-                else if (this.gamepad1.b)
+                else if (this.gamepad1.dpad_down)
                 {
                     this.driveMode = DRIVEMODE.ARCADE;
                 }
-                else if (this.gamepad1.y)
-                {
-                    this.driveMode = DRIVEMODE.LEFT_STICK;
-                }
-                else if (this.gamepad1.dpad_down)
+                else if (this.gamepad1.dpad_left)
                 {
                     this.driveMode = DRIVEMODE.X4;
-                } else if (this.gamepad1.dpad_left)
-                {
-                    this.driveMode = DRIVEMODE.X2;
-                } else if (this.gamepad1.dpad_right)
+                }
+                else if (this.gamepad1.dpad_right)
                 {
                     this.driveMode = DRIVEMODE.X3;
                 }
+
+                //control collector motor
+                if(this.gamepad1.left_bumper)
+                {
+                    this.motorCollector.setPower(FULL_SPEED_REVERSE);
+                }
+                else
+                {
+                    this.motorCollector.setPower(STOPPED);
+                }
+                //control delivery mechanism
+                if(this.gamepad1.x)
+                {
+                    servoDeliveryLeft.setPosition(1);
+                }
+                else if(this.gamepad1.a)
+                {
+                    servoDeliveryLeft.setPosition(-1);
+                }
+                else
+                {
+                    servoDeliveryLeft.setPosition(0);
+                }
+
+
+                if(this.gamepad1.y)
+                {
+                    servoDeliveryRight.setPosition(1);
+                }
+                else if(this.gamepad1.b)
+                {
+                    servoDeliveryRight.setPosition(-1);
+                }
+                else
+                {
+                    servoDeliveryRight.setPosition(0);
+                }
+
+
+
 
                 // There is (likely) new gamepad input available.
                 // Do something with that! Here, we just drive.
