@@ -15,7 +15,7 @@ import org.swerverobotics.library.interfaces.TeleOp;
 @TeleOp(name="417 TeleOp Demo", group="Swerve Examples")
 public class SynchTeleOpModes417 extends SynchronousOpMode
 {
-    enum DRIVEMODE { TANK, ARCADE, LEFT_STICK,X4,X2,X3 };
+    enum DriveModeEnum { TANK, ARCADE, LEFT_STICK,X4,X2,X3 };
     String[]  driveModeLabel = new String[] { "tank", "arcade", "left stick","X1.5","X2","X3"};
 
     // All hardware variables can only be initialized inside the main() function,
@@ -25,18 +25,23 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
     DcMotor motorBackLeft  = null;
     DcMotor motorBackRight = null;
     DcMotor motorCollector = null;
+    DcMotor motorDeliverySlider = null;
     DcMotor motorHook = null;
-    Servo   servoDeliveryRight = null;
-    Servo   servoDeliveryLeft = null;
+    Servo   servoDelivery = null;
+    Servo   servoCollectorLift = null;
 
 
 
-    DRIVEMODE driveMode      = DRIVEMODE.TANK;
+    DriveModeEnum driveMode = DriveModeEnum.TANK;
 
     //motor speed constants
     final double FULL_SPEED = 1.0;
     final double STOPPED = 0.0;
     final double FULL_SPEED_REVERSE = -1.0;
+    double frontWheelMultiply = 1.0;
+    double backWheelMultiply = 1.0;
+    //servo collector value
+    double servoDeliveryPosition = 90;
 
 
     @Override protected void main() throws InterruptedException
@@ -47,6 +52,7 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
         this.motorBackLeft = this.hardwareMap.dcMotor.get("motorBackLeft");
         this.motorBackRight = this.hardwareMap.dcMotor.get("motorBackRight");
         this.motorCollector = this.hardwareMap.dcMotor.get("motorCollector");
+        this.motorDeliverySlider = this.hardwareMap.dcMotor.get("motorDeliverySlider");
         this.motorHook = this.hardwareMap.dcMotor.get("motorHook");
 
         // Configure the knobs of the hardware according to how you've wired your
@@ -56,16 +62,17 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
         this.motorFrontRight.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
         this.motorBackLeft.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
         this.motorBackRight.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
-        this.motorHook.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
+        this.motorDeliverySlider.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
         this.motorCollector.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
+        this.motorHook.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
 
-        // One of the two motors (here, the left) should be set to reversed direction
+        // Two of the four motors (here, the left) should be set to reversed direction
         // so that it can take the same power level values as the other motor.
         this.motorFrontLeft.setDirection(DcMotor.Direction.REVERSE);
         this.motorBackLeft.setDirection(DcMotor.Direction.REVERSE);
 
-        this.servoDeliveryLeft = this.hardwareMap.servo.get("servoDeliveryLeft");
-        this.servoDeliveryRight = this.hardwareMap.servo.get("servoDeliveryRight");
+        this.servoCollectorLift = this.hardwareMap.servo.get("servoCollectorLift");
+        this.servoDelivery = this.hardwareMap.servo.get("servoDelivery");
 
         // Wait until the game begins
         this.waitForStart();
@@ -74,51 +81,95 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
         while (this.opModeIsActive())
         {
             if (this.updateGamepads()) {
-                if (this.gamepad1.dpad_up) {
-                    this.driveMode = DRIVEMODE.TANK;
+
+                //Below is the old drivemode switch
+               /* if (this.gamepad1.dpad_up) {
+                    this.driveMode = DriveModeEnum.TANK;
                 } else if (this.gamepad1.dpad_down) {
-                    this.driveMode = DRIVEMODE.ARCADE;
+                    this.driveMode = DriveModeEnum.ARCADE;
                 } else if (this.gamepad1.dpad_left) {
-                    this.driveMode = DRIVEMODE.X4;
+                    this.driveMode = DriveModeEnum.X4;
                 } else if (this.gamepad1.dpad_right) {
-                    this.driveMode = DRIVEMODE.X3;
+                    this.driveMode = DriveModeEnum.X3;
                 }
+                */
 
                 //control collector motor
-                if (this.gamepad1.left_bumper || this.gamepad2.left_bumper) {
+                if (this.gamepad1.left_bumper || this.gamepad2.left_bumper)
+                {
                     this.motorCollector.setPower(FULL_SPEED_REVERSE);
-                } else {
-                    this.motorCollector.setPower(STOPPED);
                 }
-                //control delivery mechanism
-                if (this.gamepad1.x || this.gamepad2.x) {
-                    servoDeliveryLeft.setPosition(1);
-                } else if (this.gamepad1.a || this.gamepad2.a) {
-                    servoDeliveryLeft.setPosition(0);
-                } else {
-                    servoDeliveryLeft.setPosition(.5);
-                }
-
-
-                if(this.gamepad1.y || this.gamepad2.y)
+                else if(this.gamepad1.right_bumper || this.gamepad2.right_bumper)
                 {
-                    servoDeliveryRight.setPosition(1);
-                }
-                else if(this.gamepad1.b || this.gamepad2.b)
-                {
-                    servoDeliveryRight.setPosition(0);
+                    this.motorCollector.setPower(FULL_SPEED);
                 }
                 else
                 {
-                    servoDeliveryRight.setPosition(.5);
+                    this.motorCollector.setPower(STOPPED);
                 }
-               //servoDeliveryLeft.setPosition(this.gamepad1.left_trigger);
+                //control delivery mechanism
+                if (this.gamepad1.dpad_left || this.gamepad2.dpad_left) {
+                   // servoDeliveryLeft.setPosition(1);
+                    servoDeliveryPosition += 1;
+                } else if (this.gamepad1.dpad_right || this.gamepad2.dpad_right) {
+                   // servoDeliveryLeft.setPosition(0);
+                    servoDeliveryPosition -= 1;
+                }
+                servoDelivery.setPosition(servoDeliveryPosition);
+
+                if(this.gamepad1.x || this.gamepad2.x)
+                {
+                    servoCollectorLift.setPosition(1);
+                }
+                else if(this.gamepad1.b || this.gamepad2.b)
+                {
+                    servoCollectorLift.setPosition(0);
+                }
+                else
+                {
+                    servoCollectorLift.setPosition(.5);
+                }
+
+                if(this.gamepad1.left_trigger >0)
+                {
+                    frontWheelMultiply = 0.0;
+                }
+                else
+                {
+                    frontWheelMultiply = 1.0;
+                }
+
+                if(this.gamepad1.right_trigger >0)
+                {
+                    backWheelMultiply =0.0;
+                }
+                else
+                {
+                    backWheelMultiply = 1.0;
+                }
+
+                if(this.gamepad1.dpad_up || this.gamepad2.dpad_up)
+                {
+                  this.motorDeliverySlider.setPower(FULL_SPEED);
+                }
+                else if(this.gamepad1.dpad_down || this.gamepad2.dpad_down)
+                {
+                    this.motorDeliverySlider.setPower(FULL_SPEED_REVERSE);
+                }
+
+                if(this.gamepad1.y || this.gamepad2.y)
+                {
+                    this.motorHook.setPower(FULL_SPEED);
+                }
+                else if(this.gamepad1.a || this.gamepad2.a)
+                {
+                    this.motorHook.setPower(FULL_SPEED_REVERSE);
+                }
 
 
 
 
-                // There is (likely) new gamepad input available.
-                // Do something with that! Here, we just drive.
+
                 this.doManualDrivingControl(this.gamepad1);
             }
 
@@ -132,8 +183,8 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
     }
 
     /**
-     * Implement a simple two-motor driving logic using the left and right
-     * right joysticks on the indicated game pad.
+     * Implement a simple four-motor driving logic using the left and right
+     * joysticks on gamepad 1.
      */
     void doManualDrivingControl(Gamepad pad) throws InterruptedException
     {
@@ -151,7 +202,7 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
             }
             break;
             case X4:
-            {
+            {   //this DriveMode is not currently used
                 float leftPower = xformWithExponent(pad.left_stick_y, 4f);
                 float rightPower = xformWithExponent(pad.right_stick_y, 24);
                 powerLeft = Range.clip(leftPower, -1f, 1f);
@@ -159,7 +210,7 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
             }
             break;
             case X2:
-            {
+            {   //this DriveMode is not currently used
                 float leftPower = xformWithExponent(pad.left_stick_y, 2f);
                 float rightPower = xformWithExponent(pad.right_stick_y, 2f);
                 powerLeft = Range.clip(leftPower, -1f, 1f);
@@ -167,7 +218,7 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
             }
             break;
             case X3:
-            {
+            {   //this DriveMode is not currently used
                 float leftPower =  Math.signum(pad.left_stick_y) * xformWithExponent(pad.left_stick_y, 3f);
                 float rightPower = Math.signum(pad.right_stick_y) *xformWithExponent(pad.right_stick_y, 3f);
                 powerLeft = Range.clip(leftPower, -1f, 1f);
@@ -181,7 +232,7 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
                 // Remember that the gamepad sticks range from -1 to +1, and that the motor
                 // power levels range over the same amount
                 float ctlPower    = pad.left_stick_y;
-                float ctlSteering = this.driveMode== DRIVEMODE.ARCADE? pad.right_stick_x : pad.left_stick_x;
+                float ctlSteering = this.driveMode== DriveModeEnum.ARCADE? pad.right_stick_x : pad.left_stick_x;
 
                 // We're going to assume that the deadzone processing has been taken care of for us
                 // already by the underlying system (that appears to be the intent). Were that not
@@ -215,10 +266,10 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
         }
 
         // Tell the motors
-        this.motorFrontLeft.setPower(powerLeft * -1);
-        this.motorFrontRight.setPower(powerRight * -1);
-        this.motorBackLeft.setPower(powerLeft);
-        this.motorBackRight.setPower(powerRight);
+        this.motorFrontLeft.setPower(powerLeft * frontWheelMultiply);
+        this.motorFrontRight.setPower(powerRight * frontWheelMultiply);
+        this.motorBackLeft.setPower(powerLeft * backWheelMultiply);
+        this.motorBackRight.setPower(powerRight * backWheelMultiply);
     }
 
     float xformDrivingPowerLevels(float level)
