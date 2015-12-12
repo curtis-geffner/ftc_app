@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.Range;
 
 import org.swerverobotics.library.SynchronousOpMode;
@@ -29,6 +30,7 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
     DcMotor motorHook = null;
     Servo   servoDelivery = null;
     Servo   servoCollectorLift = null;
+    TouchSensor endStop = null;
 
 
 
@@ -41,8 +43,8 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
     double frontWheelMultiply = 1.0;
     double backWheelMultiply = 1.0;
     //servo collector value
-    double servoDeliveryPosition = 90;
 
+    double servoDeliveryPosition = 0;
 
     @Override protected void main() throws InterruptedException
     {
@@ -54,6 +56,7 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
         this.motorCollector = this.hardwareMap.dcMotor.get("motorCollector");
         this.motorDeliverySlider = this.hardwareMap.dcMotor.get("motorDeliverySlider");
         this.motorHook = this.hardwareMap.dcMotor.get("motorHook");
+        this.endStop = this.hardwareMap.touchSensor.get("endStop");
 
         // Configure the knobs of the hardware according to how you've wired your
         // robot. Here, we assume that there are no encoders connected to the motors,
@@ -76,6 +79,8 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
 
         // Wait until the game begins
         this.waitForStart();
+
+
 
         // Enter a loop processing all the input we receive
         while (this.opModeIsActive())
@@ -109,13 +114,21 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
                 }
                 //control delivery mechanism
                 if (this.gamepad1.dpad_left || this.gamepad2.dpad_left) {
-                   // servoDeliveryLeft.setPosition(1);
-                    servoDeliveryPosition += 1;
+                    //servoDeliveryPosition += 0.1;
+                    servoDeliveryPosition = 0.45;
+                    servoDelivery.setPosition(servoDeliveryPosition);
                 } else if (this.gamepad1.dpad_right || this.gamepad2.dpad_right) {
-                   // servoDeliveryLeft.setPosition(0);
-                    servoDeliveryPosition -= 1;
+
+                    //servoDeliveryPosition -= 0.1;
+                    servoDeliveryPosition = 0.55;
+                    servoDelivery.setPosition(servoDeliveryPosition);
                 }
-                servoDelivery.setPosition(servoDeliveryPosition);
+                else
+                {
+                    servoDelivery.setPosition(0.5);
+                }
+
+                //servoDelivery.setPosition(servoDeliveryPosition);
 
                 if(this.gamepad1.x || this.gamepad2.x)
                 {
@@ -148,13 +161,17 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
                     backWheelMultiply = 1.0;
                 }
 
-                if(this.gamepad1.dpad_up || this.gamepad2.dpad_up)
+                if(this.gamepad1.dpad_up && !this.endStop.isPressed() || this.gamepad2.dpad_up && !this.endStop.isPressed())
                 {
                   this.motorDeliverySlider.setPower(FULL_SPEED);
                 }
                 else if(this.gamepad1.dpad_down || this.gamepad2.dpad_down)
                 {
                     this.motorDeliverySlider.setPower(FULL_SPEED_REVERSE);
+                }
+                else
+                {
+                    this.motorDeliverySlider.setPower(STOPPED);
                 }
 
                 if(this.gamepad1.y || this.gamepad2.y)
@@ -165,12 +182,17 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
                 {
                     this.motorHook.setPower(FULL_SPEED_REVERSE);
                 }
+                else
+                {
+                    this.motorHook.setPower(STOPPED);
+                }
 
 
 
 
-
+                //this.telemetry.log.add();
                 this.doManualDrivingControl(this.gamepad1);
+
             }
 
             // Emit telemetry
@@ -204,7 +226,7 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
             case X4:
             {   //this DriveMode is not currently used
                 float leftPower = xformWithExponent(pad.left_stick_y, 4f);
-                float rightPower = xformWithExponent(pad.right_stick_y, 24);
+                float rightPower = xformWithExponent(pad.right_stick_y, 4f);
                 powerLeft = Range.clip(leftPower, -1f, 1f);
                 powerRight = Range.clip(rightPower, -1f, 1f);;
             }
