@@ -10,7 +10,7 @@ import org.swerverobotics.library.interfaces.TeleOp;
  * This file will test 1 servo based on joystick input
  */
 @TeleOp(name="DrywServo", group="Swerve Examples")
-@Disabled
+//@Disabled
 public class ServoTester extends SynchronousOpMode
 {
     // Declare servo
@@ -19,12 +19,12 @@ public class ServoTester extends SynchronousOpMode
     @Override protected void main() throws InterruptedException
     {
         // Initialize servo
-        this.servo = this.hardwareMap.servo.get("servo");
+        this.servo = this.hardwareMap.servo.get("servoDelivery");
 
         // Configure dashboard
         this.telemetry.addLine
                 (
-                        this.telemetry.item("Servo:", new IFunc<Object>() {
+                        this.telemetry.item("ServoDelivery:", new IFunc<Object>() {
                             @Override
                             public Object value() {
                                 return servo.getPosition();

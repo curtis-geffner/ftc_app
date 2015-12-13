@@ -85,7 +85,11 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
         // Enter a loop processing all the input we receive
         while (this.opModeIsActive())
         {
+            boolean touchSensorIsActive = this.endStop.isPressed();
+
             if (this.updateGamepads()) {
+
+                touchSensorIsActive = this.endStop.isPressed();
 
                 //Below is the old drivemode switch
                /* if (this.gamepad1.dpad_up) {
@@ -115,12 +119,12 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
                 //control delivery mechanism
                 if (this.gamepad1.dpad_left || this.gamepad2.dpad_left) {
                     //servoDeliveryPosition += 0.1;
-                    servoDeliveryPosition = 0.45;
+                    servoDeliveryPosition = 0.55;
                     servoDelivery.setPosition(servoDeliveryPosition);
                 } else if (this.gamepad1.dpad_right || this.gamepad2.dpad_right) {
 
                     //servoDeliveryPosition -= 0.1;
-                    servoDeliveryPosition = 0.55;
+                    servoDeliveryPosition = 0.45;
                     servoDelivery.setPosition(servoDeliveryPosition);
                 }
                 else
@@ -161,9 +165,17 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
                     backWheelMultiply = 1.0;
                 }
 
-                if(this.gamepad1.dpad_up && !this.endStop.isPressed() || this.gamepad2.dpad_up && !this.endStop.isPressed())
+
+                if(this.gamepad1.dpad_up || this.gamepad2.dpad_up )
                 {
-                  this.motorDeliverySlider.setPower(FULL_SPEED);
+                    if (touchSensorIsActive)
+                    {
+                        this.motorDeliverySlider.setPower(FULL_SPEED);
+                    }
+                    else
+                    {
+                        this.motorDeliverySlider.setPower(STOPPED);
+                    }
                 }
                 else if(this.gamepad1.dpad_down || this.gamepad2.dpad_down)
                 {
@@ -186,9 +198,6 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
                 {
                     this.motorHook.setPower(STOPPED);
                 }
-
-
-
 
                 //this.telemetry.log.add();
                 this.doManualDrivingControl(this.gamepad1);
