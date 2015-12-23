@@ -10,11 +10,12 @@ import org.swerverobotics.library.interfaces.*;
  * Java package.
  */
 @TeleOp(name="My First OpMode")
+@Disabled
 public class MyFirstOpMode extends SynchronousOpMode
     {
     /* Declare here any fields you might find useful. */
     // DcMotor motorLeft = null;
-    // DcMotor motorRight = null;
+    // DcMotor motorFrontRight = null;
 
     @Override public void main() throws InterruptedException
         {
@@ -23,7 +24,7 @@ public class MyFirstOpMode extends SynchronousOpMode
          * step you did in the FTC Robot Controller app on the phone.
          */
         // this.motorLeft = this.hardwareMap.dcMotor.get("motorLeft");
-        // this.motorRight = this.hardwareMap.dcMotor.get("motorRight");
+        // this.motorFrontRight = this.hardwareMap.dcMotor.get("motorFrontRight");
 
         // Wait for the game to start
         waitForStart();
