@@ -46,6 +46,15 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
 
     double servoDeliveryPosition = 0;
 
+    enum enumMotorSliderState
+    {
+        stopped,
+        forwards,
+        reverse
+    }
+
+    enumMotorSliderState motorSliderState = enumMotorSliderState.stopped;
+
     @Override protected void main() throws InterruptedException
     {
         // Initialize our hardware variables
@@ -85,11 +94,11 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
         // Enter a loop processing all the input we receive
         while (this.opModeIsActive())
         {
-            boolean touchSensorIsActive = this.endStop.isPressed();
+
 
             if (this.updateGamepads()) {
 
-                touchSensorIsActive = this.endStop.isPressed();
+                //touchSensorIsActive = this.endStop.isPressed();
 
                 //Below is the old drivemode switch
                /* if (this.gamepad1.dpad_up) {
@@ -168,22 +177,20 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
 
                 if(this.gamepad1.dpad_up || this.gamepad2.dpad_up )
                 {
-                    if (touchSensorIsActive)
-                    {
+                    if (!this.endStop.isPressed()) {
                         this.motorDeliverySlider.setPower(FULL_SPEED);
-                    }
-                    else
-                    {
-                        this.motorDeliverySlider.setPower(STOPPED);
+                        motorSliderState = enumMotorSliderState.forwards;
                     }
                 }
                 else if(this.gamepad1.dpad_down || this.gamepad2.dpad_down)
                 {
                     this.motorDeliverySlider.setPower(FULL_SPEED_REVERSE);
+                    motorSliderState = enumMotorSliderState.reverse;
                 }
                 else
                 {
                     this.motorDeliverySlider.setPower(STOPPED);
+                    motorSliderState = enumMotorSliderState.stopped;
                 }
 
                 if(this.gamepad1.y || this.gamepad2.y)
@@ -203,6 +210,14 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
                 this.doManualDrivingControl(this.gamepad1);
 
             }
+
+            if ((motorSliderState == enumMotorSliderState.forwards) & (this.endStop.isPressed()))
+            {
+                this.motorDeliverySlider.setPower(STOPPED);
+                motorSliderState = enumMotorSliderState.stopped;
+
+            }
+
 
             // Emit telemetry
             this.telemetry.addData("Drive mode", driveModeLabel[driveMode.ordinal()]);
