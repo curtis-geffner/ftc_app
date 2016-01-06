@@ -74,9 +74,12 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
         this.motorFrontRight.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
         this.motorBackLeft.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
         this.motorBackRight.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
-        this.motorDeliverySlider.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
+        this.motorDeliverySlider.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         this.motorCollector.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
         this.motorHook.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
+
+
+        this.motorDeliverySlider.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
 
         // Two of the four motors (here, the left) should be set to reversed direction
         // so that it can take the same power level values as the other motor.
@@ -95,6 +98,7 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
         while (this.opModeIsActive())
         {
 
+            telemetry.addData("motorDeliverySlider_encoder",this.motorDeliverySlider.getCurrentPosition());
 
             if (this.updateGamepads()) {
 
@@ -177,7 +181,7 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
 
                 if(this.gamepad1.dpad_up || this.gamepad2.dpad_up )
                 {
-                    if (!this.endStop.isPressed()) {
+                    if (this.motorDeliverySlider.getCurrentPosition() < 10000) {
                         this.motorDeliverySlider.setPower(FULL_SPEED);
                         motorSliderState = enumMotorSliderState.forwards;
                     }
@@ -206,12 +210,19 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
                     this.motorHook.setPower(STOPPED);
                 }
 
+
+                if(this.gamepad1.start || this.gamepad2.start)
+                {
+                    this.motorDeliverySlider.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+                    this.motorDeliverySlider.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
+                }
+
                 //this.telemetry.log.add();
                 this.doManualDrivingControl(this.gamepad1);
 
             }
 
-            if ((motorSliderState == enumMotorSliderState.forwards) & (this.endStop.isPressed()))
+            if ((motorSliderState == enumMotorSliderState.forwards) & (this.motorDeliverySlider.getCurrentPosition() >= 10000 ))
             {
                 this.motorDeliverySlider.setPower(STOPPED);
                 motorSliderState = enumMotorSliderState.stopped;
