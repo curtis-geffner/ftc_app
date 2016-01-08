@@ -10,7 +10,7 @@ import org.swerverobotics.library.interfaces.TeleOp;
  * This file will test 1 servo based on joystick input
  */
 @TeleOp(name="DrywServo", group="Swerve Examples")
-//@Disabled
+@Disabled
 public class ServoTester extends SynchronousOpMode
 {
     // Declare servo

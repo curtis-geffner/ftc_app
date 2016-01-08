@@ -30,7 +30,7 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
     DcMotor motorHook = null;
     Servo   servoDelivery = null;
     Servo   servoCollectorLift = null;
-    TouchSensor endStop = null;
+
 
 
 
@@ -65,7 +65,7 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
         this.motorCollector = this.hardwareMap.dcMotor.get("motorCollector");
         this.motorDeliverySlider = this.hardwareMap.dcMotor.get("motorDeliverySlider");
         this.motorHook = this.hardwareMap.dcMotor.get("motorHook");
-        this.endStop = this.hardwareMap.touchSensor.get("endStop");
+
 
         // Configure the knobs of the hardware according to how you've wired your
         // robot. Here, we assume that there are no encoders connected to the motors,
@@ -181,7 +181,7 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
 
                 if(this.gamepad1.dpad_up || this.gamepad2.dpad_up )
                 {
-                    if (this.motorDeliverySlider.getCurrentPosition() < 10000) {
+                    if (this.motorDeliverySlider.getCurrentPosition() < 7000) {
                         this.motorDeliverySlider.setPower(FULL_SPEED);
                         motorSliderState = enumMotorSliderState.forwards;
                     }
@@ -215,6 +215,7 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
                 {
                     this.motorDeliverySlider.setMode(DcMotorController.RunMode.RESET_ENCODERS);
                     this.motorDeliverySlider.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
+
                 }
 
                 //this.telemetry.log.add();
@@ -222,7 +223,7 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
 
             }
 
-            if ((motorSliderState == enumMotorSliderState.forwards) & (this.motorDeliverySlider.getCurrentPosition() >= 10000 ))
+            if ((motorSliderState == enumMotorSliderState.forwards) & (this.motorDeliverySlider.getCurrentPosition() >= 7000 ))
             {
                 this.motorDeliverySlider.setPower(STOPPED);
                 motorSliderState = enumMotorSliderState.stopped;

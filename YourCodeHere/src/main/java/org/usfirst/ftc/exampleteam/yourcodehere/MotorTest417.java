@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.Range;
 
 import org.swerverobotics.library.SynchronousOpMode;
+import org.swerverobotics.library.interfaces.Disabled;
 import org.swerverobotics.library.interfaces.TeleOp;
 
 /**
@@ -16,6 +17,7 @@ import org.swerverobotics.library.interfaces.TeleOp;
  * TODO: Perhaps consolidate the two examples 
  */
 @TeleOp(name="417 Motor Test", group="Swerve Examples")
+@Disabled
 public class MotorTest417 extends SynchronousOpMode
 {
     // All hardware variables can only be initialized inside the main() function,
