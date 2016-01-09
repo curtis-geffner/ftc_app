@@ -28,6 +28,7 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
     DcMotor motorCollector = null;
     DcMotor motorDeliverySlider = null;
     DcMotor motorHook = null;
+    DcMotor motorLift = null;
     Servo   servoDelivery = null;
     Servo   servoCollectorLift = null;
 
@@ -65,6 +66,7 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
         this.motorCollector = this.hardwareMap.dcMotor.get("motorCollector");
         this.motorDeliverySlider = this.hardwareMap.dcMotor.get("motorDeliverySlider");
         this.motorHook = this.hardwareMap.dcMotor.get("motorHook");
+        this.motorLift = this.hardwareMap.dcMotor.get("motorLift");
 
 
         // Configure the knobs of the hardware according to how you've wired your
@@ -77,6 +79,7 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
         this.motorDeliverySlider.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         this.motorCollector.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
         this.motorHook.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
+        this.motorLift.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
 
 
         this.motorDeliverySlider.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
@@ -149,15 +152,18 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
 
                 if(this.gamepad1.x || this.gamepad2.x)
                 {
-                    servoCollectorLift.setPosition(1);
+                    //servoCollectorLift.setPosition(1);
+                    this.motorHook.setPower(FULL_SPEED);
                 }
                 else if(this.gamepad1.b || this.gamepad2.b)
                 {
-                    servoCollectorLift.setPosition(0);
+                   // servoCollectorLift.setPosition(0);
+                    this.motorHook.setPower(FULL_SPEED_REVERSE);
                 }
                 else
                 {
-                    servoCollectorLift.setPosition(.5);
+                    //servoCollectorLift.setPosition(.5);
+                    this.motorHook.setPower(STOPPED);
                 }
 
                 if(this.gamepad1.left_trigger >0)
@@ -199,15 +205,15 @@ public class SynchTeleOpModes417 extends SynchronousOpMode
 
                 if(this.gamepad1.y || this.gamepad2.y)
                 {
-                    this.motorHook.setPower(FULL_SPEED);
+                    this.motorLift.setPower(FULL_SPEED);
                 }
                 else if(this.gamepad1.a || this.gamepad2.a)
                 {
-                    this.motorHook.setPower(FULL_SPEED_REVERSE);
+                    this.motorLift.setPower(FULL_SPEED_REVERSE);
                 }
                 else
                 {
-                    this.motorHook.setPower(STOPPED);
+                    this.motorLift.setPower(STOPPED);
                 }
 
 
