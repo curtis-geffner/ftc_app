@@ -100,10 +100,10 @@ public abstract class MasterOpmode417 extends SynchronousOpMode
         // Configure the knobs of the hardware according to how you've wired your
         // robot. Here, we assume that there are no encoders connected to the motors,
         // so we inform the motor objects of that fact.
-        this.motorFrontLeft.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-        this.motorFrontRight.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-        this.motorBackLeft.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-        this.motorBackRight.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        this.motorFrontLeft.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
+        this.motorFrontRight.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
+        this.motorBackLeft.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
+        this.motorBackRight.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
         this.motorDeliverySlider.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         this.motorCollector.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
         this.motorHook.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
@@ -118,7 +118,44 @@ public abstract class MasterOpmode417 extends SynchronousOpMode
         this.motorBackLeft.setDirection(DcMotor.Direction.REVERSE);
     }
 
+    void driveTo(double power, int position , boolean resetEncoders)
+    {
 
+        if(resetEncoders)
+        {
+            this.motorFrontLeft.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+            this.motorFrontRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+            this.motorBackLeft.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+            this.motorBackRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+
+        }
+        this.motorFrontLeft.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
+        this.motorFrontRight.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
+        this.motorBackLeft.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
+        this.motorBackRight.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
+
+
+        this.motorBackLeft.setTargetPosition(position);
+        this.motorBackRight.setTargetPosition(position);
+        this.motorFrontLeft.setTargetPosition(position);
+        this.motorFrontRight.setTargetPosition(position);
+        this.motorBackLeft.setPower(power);
+        this.motorBackRight.setPower(power);
+        this.motorFrontLeft.setPower(power);
+        this.motorBackRight.setPower(power);
+        while ( this.motorBackLeft.isBusy() ||
+                this.motorBackRight.isBusy() ||
+                this.motorFrontLeft.isBusy() ||
+                this.motorFrontRight.isBusy())
+        {
+
+        }
+        this.motorBackLeft.setPower(0);
+        this.motorBackRight.setPower(0);
+        this.motorFrontLeft.setPower(0);
+        this.motorBackRight.setPower(0);
+
+    }
 
 
 }

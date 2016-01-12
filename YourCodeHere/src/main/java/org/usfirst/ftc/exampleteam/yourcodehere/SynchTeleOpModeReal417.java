@@ -29,7 +29,7 @@ public class SynchTeleOpModeReal417 extends MasterOpmode417
         // robot. Here, we assume that there are no encoders connected to the motors,
         // so we inform the motor objects of that fact.
        setRunModesTeleop();
-        
+
         // Wait until the game begins
         this.waitForStart();
 

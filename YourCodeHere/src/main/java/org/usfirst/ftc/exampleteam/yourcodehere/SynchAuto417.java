@@ -66,7 +66,7 @@ public class SynchAuto417 extends MasterOpmode417
         // Wait until the game begins
         this.waitForStart();
 
-
+        driveTo(1,2800,true);
 
 
     }
