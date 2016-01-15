@@ -26,7 +26,9 @@ public abstract class MasterOpmode417 extends SynchronousOpMode
     DcMotor motorHook = null;
     DcMotor motorLift = null;
     Servo   servoDelivery = null;
-    Servo   servoCollectorLift = null;
+   // Servo   servoCollectorLift = null;
+    Servo   servoClimberLeft = null;
+    Servo   servoClimberRight = null;
 
 
     DriveModeEnum driveMode = DriveModeEnum.TANK;
@@ -62,8 +64,10 @@ public abstract class MasterOpmode417 extends SynchronousOpMode
         this.motorHook = this.hardwareMap.dcMotor.get("motorHook");
         this.motorLift = this.hardwareMap.dcMotor.get("motorLift");
 
-        this.servoCollectorLift = this.hardwareMap.servo.get("servoCollectorLift");
+      //  this.servoCollectorLift = this.hardwareMap.servo.get("servoCollectorLift");
         this.servoDelivery = this.hardwareMap.servo.get("servoDelivery");
+        this.servoClimberLeft = this.hardwareMap.servo.get("servoClimberLeft");
+        this.servoClimberRight = this.hardwareMap.servo.get("servoClimberRight");
 
 
 
@@ -77,10 +81,10 @@ public abstract class MasterOpmode417 extends SynchronousOpMode
         // Configure the knobs of the hardware according to how you've wired your
         // robot. Here, we assume that there are no encoders connected to the motors,
         // so we inform the motor objects of that fact.
-        this.motorFrontLeft.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-        this.motorFrontRight.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-        this.motorBackLeft.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-        this.motorBackRight.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        this.motorFrontLeft.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
+        this.motorFrontRight.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
+        this.motorBackLeft.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
+        this.motorBackRight.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
         this.motorDeliverySlider.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         this.motorCollector.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
         this.motorHook.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
@@ -118,36 +122,60 @@ public abstract class MasterOpmode417 extends SynchronousOpMode
         this.motorBackLeft.setDirection(DcMotor.Direction.REVERSE);
     }
 
-    void driveTo(double power, int position , boolean resetEncoders)
+    void driveTo(double power, int position , boolean resetEncoders) throws InterruptedException
     {
+
+        telemetry.log.add("starting driveto");
 
         if(resetEncoders)
         {
+            telemetry.log.add("try reset frontleft...");
             this.motorFrontLeft.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+            telemetry.log.add("try reset frontright");
             this.motorFrontRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+            telemetry.log.add("try reset backleft ");
             this.motorBackLeft.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+            telemetry.log.add("try reset backright");
             this.motorBackRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
 
         }
+
+        telemetry.log.add("done reset");
+
         this.motorFrontLeft.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
         this.motorFrontRight.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
         this.motorBackLeft.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
         this.motorBackRight.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
 
+        telemetry.log.add("done set mode");
 
         this.motorBackLeft.setTargetPosition(position);
         this.motorBackRight.setTargetPosition(position);
         this.motorFrontLeft.setTargetPosition(position);
         this.motorFrontRight.setTargetPosition(position);
+
+        telemetry.log.add("done set target");
+
         this.motorBackLeft.setPower(power);
         this.motorBackRight.setPower(power);
         this.motorFrontLeft.setPower(power);
         this.motorBackRight.setPower(power);
+
+        telemetry.log.add("done set power");
+
         while ( this.motorBackLeft.isBusy() ||
                 this.motorBackRight.isBusy() ||
                 this.motorFrontLeft.isBusy() ||
                 this.motorFrontRight.isBusy())
         {
+            //wait
+            telemetry.addData("backleft", this.motorBackLeft.getCurrentPosition());
+            telemetry.addData("backRight", this.motorBackLeft.getCurrentPosition());
+            telemetry.addData("frontleft", this.motorFrontLeft.getCurrentPosition());
+            telemetry.addData("frontRight", this.motorFrontRight.getCurrentPosition());
+            telemetry.update();
+
+            this.idle();
 
         }
         this.motorBackLeft.setPower(0);
@@ -156,6 +184,8 @@ public abstract class MasterOpmode417 extends SynchronousOpMode
         this.motorBackRight.setPower(0);
 
     }
+
+
 
 
 }
