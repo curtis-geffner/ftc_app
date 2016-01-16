@@ -110,7 +110,7 @@ public class SynchTeleOpModeReal417 extends MasterOpmode417
                     this.motorDeliverySlider.setPower(FULL_SPEED_REVERSE);
                     motorSliderState = enumMotorSliderState.reverse;
                 }
-                else
+                else if (motorSliderState != enumMotorSliderState.stopped)
                 {
                     this.motorDeliverySlider.setPower(STOPPED);
                     motorSliderState = enumMotorSliderState.stopped;
@@ -240,6 +240,7 @@ public class SynchTeleOpModeReal417 extends MasterOpmode417
 
             }
 
+            //prevent delivery slide from over-extending
             if ((motorSliderState == enumMotorSliderState.forwards) && (this.motorDeliverySlider.getCurrentPosition() >= 17000 ))
             {
                 this.motorDeliverySlider.setPower(STOPPED);
@@ -279,6 +280,7 @@ public class SynchTeleOpModeReal417 extends MasterOpmode417
                 float rightPower = pad.right_stick_y;
                 powerLeft = Range.clip(leftPower, -1f, 1f);
                 powerRight = Range.clip(rightPower, -1f, 1f);
+
             }
             break;
             case X4:

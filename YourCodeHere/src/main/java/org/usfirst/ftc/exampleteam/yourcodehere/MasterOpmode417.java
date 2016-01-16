@@ -104,8 +104,8 @@ public abstract class MasterOpmode417 extends SynchronousOpMode
         // Configure the knobs of the hardware according to how you've wired your
         // robot. Here, we assume that there are no encoders connected to the motors,
         // so we inform the motor objects of that fact.
-        this.motorFrontLeft.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
-        this.motorFrontRight.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
+        this.motorFrontLeft.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
+        this.motorFrontRight.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
         this.motorBackLeft.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
         this.motorBackRight.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
         this.motorDeliverySlider.setMode(DcMotorController.RunMode.RESET_ENCODERS);
@@ -129,10 +129,7 @@ public abstract class MasterOpmode417 extends SynchronousOpMode
 
         if(resetEncoders)
         {
-            telemetry.log.add("try reset frontleft...");
-            this.motorFrontLeft.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-            telemetry.log.add("try reset frontright");
-            this.motorFrontRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+
             telemetry.log.add("try reset backleft ");
             this.motorBackLeft.setMode(DcMotorController.RunMode.RESET_ENCODERS);
             telemetry.log.add("try reset backright");
@@ -142,17 +139,16 @@ public abstract class MasterOpmode417 extends SynchronousOpMode
 
         telemetry.log.add("done reset");
 
-        this.motorFrontLeft.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
-        this.motorFrontRight.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
+        this.motorFrontLeft.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
+        this.motorFrontRight.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
         this.motorBackLeft.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
         this.motorBackRight.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
 
         telemetry.log.add("done set mode");
 
-        this.motorBackLeft.setTargetPosition(position);
-        this.motorBackRight.setTargetPosition(position);
-        this.motorFrontLeft.setTargetPosition(position);
-        this.motorFrontRight.setTargetPosition(position);
+
+        //this.motorFrontLeft.setTargetPosition(position);
+        //this.motorFrontRight.setTargetPosition(position);
 
         telemetry.log.add("done set target");
 
@@ -163,26 +159,32 @@ public abstract class MasterOpmode417 extends SynchronousOpMode
 
         telemetry.log.add("done set power");
 
-        while ( this.motorBackLeft.isBusy() ||
-                this.motorBackRight.isBusy() ||
-                this.motorFrontLeft.isBusy() ||
-                this.motorFrontRight.isBusy())
+        while ( this.motorBackLeft.isBusy() || this.motorBackRight.isBusy())
         {
             //wait
+
             telemetry.addData("backleft", this.motorBackLeft.getCurrentPosition());
-            telemetry.addData("backRight", this.motorBackLeft.getCurrentPosition());
-            telemetry.addData("frontleft", this.motorFrontLeft.getCurrentPosition());
-            telemetry.addData("frontRight", this.motorFrontRight.getCurrentPosition());
+            telemetry.addData("backRight", this.motorBackRight.getCurrentPosition());
             telemetry.update();
 
             this.idle();
 
         }
+        telemetry.log.add("done moving");
         this.motorBackLeft.setPower(0);
         this.motorBackRight.setPower(0);
         this.motorFrontLeft.setPower(0);
         this.motorBackRight.setPower(0);
 
+    }
+    public void delay(long millis) throws InterruptedException
+    {
+        long startTime = System.currentTimeMillis();
+        while(System.currentTimeMillis() - startTime < millis)
+        {
+            telemetry.update();
+            idle();
+        }
     }
 
 

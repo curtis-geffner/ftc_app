@@ -37,6 +37,7 @@ public class TeleOpTest extends MasterOpmode417
                 float rightPower = gamepad1.right_stick_y;
                 float powerLeft = Range.clip(leftPower, -1f, 1f);
                 float powerRight = Range.clip(rightPower, -1f, 1f);
+
                 // Tell the motors
                 this.motorFrontLeft.setPower(powerLeft );
                 this.motorFrontRight.setPower(powerRight );
@@ -51,6 +52,7 @@ public class TeleOpTest extends MasterOpmode417
             telemetry.addData("backmultiply", this.backWheelMultiply);
             //telemetry.addData("controllerSwitch", controllerSwitch);
             this.telemetry.update();
+
 
             // Let the rest of the system run until there's a stimulus from the robot controller runtime.
             this.idle();
