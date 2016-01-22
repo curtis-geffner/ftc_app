@@ -1,25 +1,21 @@
 package org.usfirst.ftc.exampleteam.yourcodehere;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorController;
-import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.Range;
 
-import org.swerverobotics.library.SynchronousOpMode;
 import org.swerverobotics.library.interfaces.TeleOp;
 
 /**
  * 417 teleop
  */
 @TeleOp(name="417 Auto", group="Swerve Examples")
-public class SynchAuto417 extends MasterOpmode417
+public class AutoStraight extends MasterAuto
 {
     enum DriveModeEnum { TANK, ARCADE, LEFT_STICK,X4,X2,X3 };
     String[]  driveModeLabel = new String[] { "tank", "arcade", "left stick","X1.5","X2","X3"};
 
     // All hardware variables can only be initialized inside the main() function,
-    // not here at their member variable declarations.
+// not here at their member variable declarations.
     DcMotor motorFrontLeft  = null;
     DcMotor motorFrontRight = null;
     DcMotor motorBackLeft  = null;
@@ -42,7 +38,7 @@ public class SynchAuto417 extends MasterOpmode417
     final double FULL_SPEED_REVERSE = -1.0;
     double frontWheelMultiply = 1.0;
     double backWheelMultiply = 1.0;
-    //servo collector value
+//servo collector value
 
     double servoDeliveryPosition = 0;
 
@@ -57,18 +53,14 @@ public class SynchAuto417 extends MasterOpmode417
 
     @Override protected void main() throws InterruptedException
     {
-
-        initializeHardware();
-
-        setRunModesAuto();
-
+        initialize();
 
         // Wait until the game begins
         this.waitForStart();
 
         telemetry.log.add("starting wait");
-        delay(1000);
-        driveTo(1,300,true);
+        delay(9500);
+        driveTo(-1,-13000,true);
 
 
     }
