@@ -39,18 +39,15 @@ public abstract class MasterAuto extends MasterOpMode
             telemetry.log.add("try reset backright");
             this.motorBackRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         }
-
         telemetry.log.add("done reset");
+
         this.motorBackRight.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
-
         telemetry.log.add("done set mode");
-        this.motorBackRight.setTargetPosition(position);
 
+        this.motorBackRight.setTargetPosition(position);
         telemetry.log.add("done set target");
-        this.motorBackLeft.setPower(power);
-        this.motorBackRight.setPower(power);
-        this.motorFrontLeft.setPower(power);
-        this.motorFrontRight.setPower(power);
+
+        driveForward(power);
 
         telemetry.log.add("done set power");
         while ( this.motorBackRight.isBusy() )
@@ -60,10 +57,8 @@ public abstract class MasterAuto extends MasterOpMode
             this.idle();
         }
         telemetry.log.add("done moving");
-        this.motorBackLeft.setPower(0);
-        this.motorBackRight.setPower(0);
-        this.motorFrontLeft.setPower(0);
-        this.motorFrontRight.setPower(0);
+
+        driveStop();
 
         telemetry.addData("backRight", this.motorBackRight.getCurrentPosition());
         telemetry.update();

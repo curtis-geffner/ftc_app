@@ -33,11 +33,6 @@ public abstract class MasterOpMode extends SynchronousOpMode
 
     DriveModeEnum driveMode = DriveModeEnum.TANK;
 
-    //motor speed constants
-    final double FULL_SPEED = 1.0;
-    final double STOPPED = 0.0;
-    final double FULL_SPEED_REVERSE = -1.0;
-
     //servo collector value
     double servoDeliveryPosition = 0;
 
@@ -82,6 +77,58 @@ public abstract class MasterOpMode extends SynchronousOpMode
             telemetry.update();
             idle();
         }
+    }
+
+
+    //Variables to control the accessories
+    CRServoToggler climberLeftToggler = new CRServoToggler(this.servoClimberLeft);
+    CRServoToggler climberRightToggler = new CRServoToggler(this.servoClimberRight);
+    CRServoToggler deliveryToggler = new CRServoToggler(this.servoDelivery);
+    MotorRangedToggler slideToggler = new MotorRangedToggler(this.motorDeliverySlider, 0, 13000);
+    MotorToggler collectorToggler = new MotorToggler(this.motorCollector);
+
+    MotorToggler motorFrontRightToggle = new MotorToggler(this.motorFrontRight);
+    MotorToggler motorBackRightToggle = new MotorToggler(this.motorBackRight);
+    MotorToggler motorFrontLeftToggle = new MotorToggler(this.motorFrontLeft);
+    MotorToggler motorBackLeftToggle = new MotorToggler(this.motorBackLeft);
+
+
+
+    // COMPLETE THE ABOVE PATTERN FOR:
+    // RIGHT CLIMBER
+    // COLLECTOR
+    // SLIDE
+    // TROUGH SERVO
+
+    final double FULL_SPEED = 1.0;
+    final double STOPPED = 0.0;
+    final double FULL_SPEED_REVERSE = -1.0;
+
+
+
+    // DRIVE FUNCTIONS
+    public void driveLeft(double power)
+    {
+        motorFrontLeftToggle.setSpeed(power);
+        motorBackLeftToggle.setSpeed(power);
+    }
+    public void driveRight(double power)
+    {
+        motorFrontRightToggle.setSpeed(power);
+        motorBackRightToggle.setSpeed(power);
+    }
+    public void driveForward(double power)
+    {
+        driveLeft(power);
+        driveRight(power);
+    }
+    public void driveBackward(double power)
+    {
+        driveForward(-power);
+    }
+    public void driveStop()
+    {
+        driveForward(0);
     }
 
 }
