@@ -24,11 +24,26 @@ public abstract class MasterOpMode extends SynchronousOpMode
     DcMotor motorBackRight = null;
     DcMotor motorCollector = null;
     DcMotor motorDeliverySlider = null;
-    DcMotor motorHook = null;
-    DcMotor motorLift = null;
+    //DcMotor motorHook = null;
+    //DcMotor motorLift = null;
     Servo   servoDelivery = null;
     Servo   servoClimberLeft = null;
     Servo   servoClimberRight = null;
+
+
+    //Variables to control the accessories
+    CRServoToggler climberLeftToggler = null;
+    CRServoToggler climberRightToggler = null;
+    CRServoToggler deliveryToggler = null;
+    MotorRangedToggler slideToggler = null;
+    MotorToggler collectorToggler = null;
+
+    MotorToggler motorFrontRightToggle = null;
+    MotorToggler motorBackRightToggle = null;
+    MotorToggler motorFrontLeftToggle = null;
+    MotorToggler motorBackLeftToggle = null;
+
+
 
 
     DriveModeEnum driveMode = DriveModeEnum.TANK;
@@ -60,6 +75,8 @@ public abstract class MasterOpMode extends SynchronousOpMode
 //        this.motorHook = this.hardwareMap.dcMotor.get("motorHook");
 //        this.motorLift = this.hardwareMap.dcMotor.get("motorLift");
 
+        telemetry.log.add("motors and servos found");
+
         // Two of the four motors (here, the left) should be set to reversed direction
         // so that it can take the same power level values as the other motor.
         this.motorFrontLeft.setDirection(DcMotor.Direction.REVERSE);
@@ -67,6 +84,22 @@ public abstract class MasterOpMode extends SynchronousOpMode
         this.servoClimberLeft.setPosition(.5);
         this.servoClimberRight.setPosition(.5);
         this.servoDelivery.setPosition(.5);
+
+        telemetry.log.add("servo initial positions set");
+
+        //Variables to control the accessories
+        climberLeftToggler = new CRServoToggler(this.servoClimberLeft);
+        climberRightToggler = new CRServoToggler(this.servoClimberRight);
+        deliveryToggler = new CRServoToggler(this.servoDelivery);
+        slideToggler = new MotorRangedToggler(this.motorDeliverySlider, 0, 13000);
+        collectorToggler = new MotorToggler(this.motorCollector);
+
+        motorFrontRightToggle = new MotorToggler(this.motorFrontRight);
+        motorBackRightToggle = new MotorToggler(this.motorBackRight);
+        motorFrontLeftToggle = new MotorToggler(this.motorFrontLeft);
+        motorBackLeftToggle = new MotorToggler(this.motorBackLeft);
+
+        telemetry.log.add("togglers initialized");
     }
 
     public void delay(long millis) throws InterruptedException
@@ -79,18 +112,6 @@ public abstract class MasterOpMode extends SynchronousOpMode
         }
     }
 
-
-    //Variables to control the accessories
-    CRServoToggler climberLeftToggler = new CRServoToggler(this.servoClimberLeft);
-    CRServoToggler climberRightToggler = new CRServoToggler(this.servoClimberRight);
-    CRServoToggler deliveryToggler = new CRServoToggler(this.servoDelivery);
-    MotorRangedToggler slideToggler = new MotorRangedToggler(this.motorDeliverySlider, 0, 13000);
-    MotorToggler collectorToggler = new MotorToggler(this.motorCollector);
-
-    MotorToggler motorFrontRightToggle = new MotorToggler(this.motorFrontRight);
-    MotorToggler motorBackRightToggle = new MotorToggler(this.motorBackRight);
-    MotorToggler motorFrontLeftToggle = new MotorToggler(this.motorFrontLeft);
-    MotorToggler motorBackLeftToggle = new MotorToggler(this.motorBackLeft);
 
 
 

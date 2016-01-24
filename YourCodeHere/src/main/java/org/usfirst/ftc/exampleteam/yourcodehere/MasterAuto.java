@@ -25,8 +25,8 @@ public abstract class MasterAuto extends MasterOpMode
         this.motorBackRight.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
         this.motorDeliverySlider.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         this.motorCollector.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
-        this.motorHook.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
-        this.motorLift.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
+        //this.motorHook.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
+        //this.motorLift.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
         this.motorDeliverySlider.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
     }
 

@@ -76,7 +76,7 @@ public class TeleOpMain extends MasterTeleOp
                     this.motorDeliverySlider.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
 
                 }
-                
+
 
                 // Tell the motors
                 driveLeft(Range.clip(gamepad1.left_stick_y, -1f, 1f));

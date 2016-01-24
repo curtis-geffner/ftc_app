@@ -111,33 +111,33 @@ public class TeleOpBackup extends MasterTeleOp
 
                     if(this.gamepad1.y || this.gamepad2.y)
                     {
-                        this.motorLift.setPower(FULL_SPEED);
+                       // this.motorLift.setPower(FULL_SPEED);
                         motorLiftInMotion = true;
                     }
                     else if(this.gamepad1.a || this.gamepad2.a)
                     {
-                        this.motorLift.setPower(FULL_SPEED_REVERSE);
+                        //this.motorLift.setPower(FULL_SPEED_REVERSE);
                         motorLiftInMotion = true;
                     }
                     else if (motorLiftInMotion)
                     {
-                        this.motorLift.setPower(STOPPED);
+                        //this.motorLift.setPower(STOPPED);
                         motorLiftInMotion = false;
                     }
 
                     if(this.gamepad1.x || this.gamepad2.x)
                     {
-                        this.motorHook.setPower(FULL_SPEED);
+                        //this.motorHook.setPower(FULL_SPEED);
                         motorHookInMotion = true;
                     }
                     else if(this.gamepad1.b || this.gamepad2.b)
                     {
-                        this.motorHook.setPower(FULL_SPEED_REVERSE);
+                        //this.motorHook.setPower(FULL_SPEED_REVERSE);
                         motorHookInMotion = true;
                     }
                     else if (motorHookInMotion)
                     {
-                        this.motorHook.setPower(STOPPED);
+                        //this.motorHook.setPower(STOPPED);
                         motorHookInMotion = false;
                     }
                 }
