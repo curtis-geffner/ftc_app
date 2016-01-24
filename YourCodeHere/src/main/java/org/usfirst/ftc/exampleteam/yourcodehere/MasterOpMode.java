@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.swerverobotics.library.SynchronousOpMode;
+import org.swerverobotics.library.interfaces.EulerAngles;
 import org.swerverobotics.library.interfaces.TeleOp;
 import org.swerverobotics.library.internal.ThunkedIrSeekerSensor;
 
@@ -100,6 +101,7 @@ public abstract class MasterOpMode extends SynchronousOpMode
         motorBackLeftToggle = new MotorToggler(this.motorBackLeft);
 
         telemetry.log.add("togglers initialized");
+
     }
 
     public void delay(long millis) throws InterruptedException
