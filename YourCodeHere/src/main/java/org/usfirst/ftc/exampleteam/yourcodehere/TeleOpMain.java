@@ -68,6 +68,36 @@ public class TeleOpMain extends MasterTeleOp
                 {
                     climberRightToggler.stop();
                 }
+                //debris pusher
+                if(this.gamepad1.a)
+                {
+                    debrisMoverToggler.moveForward();
+                }
+                else if(this.gamepad1.b)
+                {
+                    debrisMoverToggler.moveReverse();
+                }
+                else
+                {
+                    debrisMoverToggler.stop();
+                }
+                //slow mode
+                if(this.gamepad1.left_trigger > Constants.SLOW_MODE_DEADZONE || this.gamepad1.right_trigger > Constants.SLOW_MODE_DEADZONE)
+                {
+                    wheelPowerMultiply = Constants.SLOW_MODE_MULTIPLIER;
+                }
+                else
+                {
+                    wheelPowerMultiply = FULL_SPEED;
+                }
+                if(this.gamepad1.left_bumper || this.gamepad1.right_bumper)
+                {
+                    reverseMode = true;
+                }
+                else
+                {
+                    reverseMode = false;
+                }
 
 
                 if(this.gamepad1.start || this.gamepad2.start)
@@ -76,13 +106,12 @@ public class TeleOpMain extends MasterTeleOp
                     this.motorDeliverySlider.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
 
                 }
-
-
                 // Tell the motors
-                driveLeft(Range.clip(gamepad1.left_stick_y, -1f, 1f));
-                driveRight(Range.clip(gamepad1.right_stick_y, -1f, 1f));
+                driveLeft(gamepad1.left_stick_y);
+                driveRight(gamepad1.right_stick_y);
+
                 collectorToggler.setSpeed(gamepad2.right_stick_y);
-                slideToggler.setSpeed(gamepad2.left_stick_y);
+                slideToggler.setSpeed(- gamepad2.left_stick_y);
 
             }
 

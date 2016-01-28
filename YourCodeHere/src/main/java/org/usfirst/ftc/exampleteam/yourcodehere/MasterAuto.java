@@ -3,17 +3,24 @@ package org.usfirst.ftc.exampleteam.yourcodehere;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.swerverobotics.library.ClassFactory;
 import org.swerverobotics.library.SynchronousOpMode;
+import org.swerverobotics.library.interfaces.EulerAngles;
+import org.swerverobotics.library.interfaces.IBNO055IMU;
 
 /**
  * 417 master opmode
  */
 public abstract class MasterAuto extends MasterOpMode
 {
+    public Transform autoStartPosition = new Transform(0.0,0.0,-90.0);
     //IMU variable declaration
     ElapsedTime elapsed = new ElapsedTime();
     IBNO055IMU.Parameters parameters = new IBNO055IMU.Parameters();
+
+    PIDFilter turnFilter = new PIDFilter( 0.04, 0.00001, 0.01 ); ///< @todo may not be necessary
 
     EulerAngles angles;
 
@@ -35,8 +42,8 @@ public abstract class MasterAuto extends MasterOpMode
         this.motorDeliverySlider.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
 
         //IMU initialization
-        parameters.angleunit = IBNO055IMU.ANGLEUNIT.DEGREES;
-        parameters.accelunit = IBNO055IMU.ACCELUNIT.METERS_PERSEC_PERSEC;
+        parameters.angleUnit = IBNO055IMU.ANGLEUNIT.DEGREES;
+        parameters.accelUnit = IBNO055IMU.ACCELUNIT.METERS_PERSEC_PERSEC;
         parameters.loggingEnabled = true;
         parameters.loggingTag = "BNO055";
         imu = ClassFactory.createAdaFruitBNO055IMU(hardwareMap.i2cDevice.get("imu"), parameters);
@@ -127,7 +134,10 @@ public abstract class MasterAuto extends MasterOpMode
             {
                 power = Math.signum(power);
             }
-            driveWheels(-power, power);
+
+            /// @todo write turn function
+            this.driveLeft(-power);
+            this.driveRight(power);
 
             telemetry.addData("power:", power);
             telemetry.addData("dA:", Δϴ);
@@ -161,7 +171,7 @@ public abstract class MasterAuto extends MasterOpMode
             wait(1);
             idle();
         }
-        stopAllMotors();
+        this.driveStop();
 
     }
 
@@ -235,11 +245,8 @@ public abstract class MasterAuto extends MasterOpMode
                 rightpower = Math.signum(rightpower);
             }
 
-            if(climbers)
-            {
-                driveClimbers(leftpower * direction * timeFactor, rightpower * direction * timeFactor);
-            }
-            driveWheels(leftpower * direction * timeFactor, rightpower * direction * timeFactor);
+            this.driveLeft(leftpower * direction * timeFactor);
+            this.driveRight(rightpower * direction * timeFactor);
 
             //check if the robot should stop
             if (Math.abs(getDistanceTraveled() - startDistance) >= Math.abs(distance))
@@ -250,18 +257,18 @@ public abstract class MasterAuto extends MasterOpMode
             wait(1);
             idle();
         }
-        stopDriveMotors();
+        this.driveStop();
 
     }
 
     //returns the average of the left/right encoders, giving a distance in CM
-    //tested to be within 0.67% of actual, at 150cm
-    private double getDistanceTraveled()
+    private double getDistanceTraveled() // in inches
     {
-        double CORRECTION_FACTOR = 1.0026;
-        double avgTick = (MotorLeftBack.getCurrentPosition() + MotorRightBack.getCurrentPosition())/2;
-        double realityFactor = Constants.REAR_WHEEL_DIAMETER * Math.PI / Constants.ANDYMARK_ENC_TICKS;
-        return avgTick*realityFactor/CORRECTION_FACTOR;
+        double CORRECTION_FACTOR = 1.0026; ///< @todo needs calibrated
+        //double avgTick = (MotorLeftBack.getCurrentPosition() + MotorRightBack.getCurrentPosition())/2;
+        double tick=this.motorBackLeft.getCurrentPosition();
+        double distanceTraveledPerTick = Constants.BACK_LEFT_WHEEL_DIAMETER * Math.PI / Constants.ANDYMARK_ENC_TICKS;
+        return tick*distanceTraveledPerTick/CORRECTION_FACTOR;
     }
 
     //return the global orientation of the robot, accounting for autonomous start

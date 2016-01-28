@@ -3,6 +3,7 @@ package org.usfirst.ftc.exampleteam.yourcodehere;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.Range;
 
 import org.swerverobotics.library.SynchronousOpMode;
 
@@ -11,7 +12,9 @@ import org.swerverobotics.library.SynchronousOpMode;
  */
 public abstract class MasterTeleOp extends MasterOpMode
 {
+    double wheelPowerMultiply = FULL_SPEED;
 
+    boolean reverseMode = false;
 
     void initialize()
     {
@@ -33,7 +36,33 @@ public abstract class MasterTeleOp extends MasterOpMode
     }
 
 
+    @Override
+    public void driveLeft(double power)
+    {
+        if(reverseMode)
+        {
+            power *= -1.0;
+            super.driveRight(Range.clip(power * wheelPowerMultiply, -1f, 1f));
+        }
+        else
+        {
+            super.driveLeft(Range.clip(power * wheelPowerMultiply, -1f, 1f));
+        }
+    }
 
+    @Override
+    public void driveRight(double power)
+    {
+        if(reverseMode)
+        {
+            power *= -1.0;
+            super.driveLeft(Range.clip(power * wheelPowerMultiply, -1f, 1f));
+        }
+        else
+        {
+            super.driveRight(Range.clip(power * wheelPowerMultiply, -1f, 1f));
+        }
+    }
 
 
 }
