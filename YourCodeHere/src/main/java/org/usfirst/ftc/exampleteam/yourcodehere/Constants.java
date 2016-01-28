@@ -15,8 +15,8 @@ public class Constants {
     public static final double SLOW_FORWARDS = 0.3 * FORWARDS;
     public static final double SLOW_BACKWARDS = 0.3 * BACKWARDS;
 
-    // in inches
-    public static final double BACK_LEFT_WHEEL_DIAMETER = 8.0;
+    // in centimeters
+    public static final double BACK_LEFT_WHEEL_DIAMETER = 20.32;
 
     public static final double SLOW_MODE_DEADZONE = 0.15;
 

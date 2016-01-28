@@ -262,12 +262,12 @@ public abstract class MasterAuto extends MasterOpMode
     }
 
     //returns the average of the left/right encoders, giving a distance in CM
-    private double getDistanceTraveled() // in inches
+    private double getDistanceTraveled() // in CM
     {
-        double CORRECTION_FACTOR = 1.0026; ///< @todo needs calibrated
+        double CORRECTION_FACTOR = 4; ///< @todo needs calibrated
         //double avgTick = (MotorLeftBack.getCurrentPosition() + MotorRightBack.getCurrentPosition())/2;
         double tick=this.motorBackLeft.getCurrentPosition();
-        double distanceTraveledPerTick = Constants.BACK_LEFT_WHEEL_DIAMETER * Math.PI / Constants.ANDYMARK_ENC_TICKS;
+        double distanceTraveledPerTick = Constants.BACK_LEFT_WHEEL_DIAMETER * Math.PI / Constants.TETRIX_ENC_TICKS;
         return tick*distanceTraveledPerTick/CORRECTION_FACTOR;
     }
 
